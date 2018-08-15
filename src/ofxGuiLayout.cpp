@@ -1,23 +1,23 @@
 
-#include "ofxGuiLayoutManager.h"
+#include "ofxGuiLayout.h"
 
 
-ofxGuiLayoutManager::ofxGuiLayoutManager(){
+ofxGuiLayout::ofxGuiLayout(){
 }
 
 
-void ofxGuiLayoutManager::addPanel(ofxPanel* panel){
+void ofxGuiLayout::addPanel(ofxPanel* panel){
     panels.push_back(panel);
 }
 
 
-void ofxGuiLayoutManager::addPanel(GuiPresets* panel){
-    panelsPreset.push_back(panel);
-}
+//void ofxGuiLayout::addPanel(GuiPresets* panel){
+//    panelsPreset.push_back(panel);
+//}
 
 
-void ofxGuiLayoutManager::loadLayout(string path){
-    ofXml xml;
+void ofxGuiLayout::loadLayout(string path){
+	ofxXmlPoco xml;
     xml.load(path);
     
     // iterate the regular panels
@@ -63,10 +63,10 @@ void ofxGuiLayoutManager::loadLayout(string path){
 }
 
 
-void ofxGuiLayoutManager::saveLayout(string path){
+void ofxGuiLayout::saveLayout(string path){
     int num_panels = 0;
     
-    ofXml xml;
+	ofxXmlPoco xml;
     xml.addChild("layout");
     
     for(int i=0; i<panels.size(); i++){

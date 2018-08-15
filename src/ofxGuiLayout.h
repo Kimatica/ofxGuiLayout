@@ -3,18 +3,18 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxXmlPoco.h"
 //#include "GuiPresets.h"
 
-class ofxGuiLayoutManager {
+
+class ofxGuiLayout {
     
 public:
     
-    ofxGuiLayoutManager();
+    ofxGuiLayout();
     
-//    void addPanel(ofxPanel* panel, string key);
-//    void addPanel(GuiPresets* panel, string key);
     void addPanel(ofxPanel* panel);
-    void addPanel(GuiPresets* panel);
+    //void addPanel(GuiPresets* panel);
     void saveLayout(string path);
     void loadLayout(string path);
     
