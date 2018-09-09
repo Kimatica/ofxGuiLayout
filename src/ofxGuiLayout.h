@@ -3,7 +3,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "ofxXmlPoco.h"
 //#include "GuiPresets.h"
 
 

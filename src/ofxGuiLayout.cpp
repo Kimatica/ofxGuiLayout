@@ -17,7 +17,7 @@ void ofxGuiLayout::addPanel(ofxPanel* panel){
 
 
 void ofxGuiLayout::loadLayout(string path){
-	ofxXmlPoco xml;
+	ofXml xml;
     xml.load(path);
     
     // iterate the regular panels
@@ -66,7 +66,7 @@ void ofxGuiLayout::loadLayout(string path){
 void ofxGuiLayout::saveLayout(string path){
     int num_panels = 0;
     
-	ofxXmlPoco xml;
+	ofXml xml;
     xml.addChild("layout");
     
     for(int i=0; i<panels.size(); i++){
