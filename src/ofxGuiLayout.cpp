@@ -1,99 +1,40 @@
-
 #include "ofxGuiLayout.h"
 
-
-ofxGuiLayout::ofxGuiLayout(){
-}
-
-
-void ofxGuiLayout::addPanel(ofxPanel* panel){
+void ofxGuiLayout::addPanel(ofxPanel* panel)
+{
     panels.push_back(panel);
 }
 
-
-void ofxPresets::addPanel(ofxPresets* panel){
-    panelsPreset.push_back(panel);
-}
-
-
-void ofxGuiLayout::loadLayout(string path){
-	ofxXmlPoco xml;
-    xml.load(path);
+void ofxGuiLayout::loadLayout(string path)
+{
+    ofXml xml;
+    bool bLoaded = xml.load(path);
+    if (!bLoaded) return;
     
-    // iterate the regular panels
-    for(int i=0; i<panels.size(); i++){
-        ofxPanel* panel = panels[i];
-        
-        xml.setTo("//"); // = xml.reset()
-        
-        // if exists on the xml
-        if(xml.exists("//[@name='" + panel->getName() + "']")){
-            xml.setTo("//[@name='" + panel->getName() + "']");
-            
-            float x = xml.getValue<float>("x");
-            float y = xml.getValue<float>("y");
-            
-            // setup the panel with the stored position
-            //panel->setup(name, name+"-settings.xml", x, y);
-            panel->setPosition(x, y);
-        }else{
-            // not saved position for this panel
-        }
-    }
+    auto layout = xml.getChild("layout");
+    if (!layout) return;
     
-    // iterate the preset panels
-    for(int i=0; i<panelsPreset.size(); i++){
-        ofxPresets* panel = panelsPreset[i];
-
-        xml.setTo("//"); // = xml.reset()
-
-        // if exists on the xml
-        if(xml.exists("//[@name='" + panel->getName() + "']")){
-            xml.setTo("//[@name='" + panel->getName() + "']");
-
-            float x = xml.getValue<float>("x");
-            float y = xml.getValue<float>("y");
-
-            // setup the panel with the stored position
-            panel->setPosition(ofPoint(x,y));
-        }else{
-            // not saved position for this panel
+    for (auto& panel : panels) {
+        auto xmlPanel = layout.findFirst("panel[@name='" + panel->getName() + "']");
+        if (xmlPanel) {
+            panel->setPosition(
+                xmlPanel.getChild("x").getFloatValue(),
+                xmlPanel.getChild("y").getFloatValue()
+            );
         }
     }
 }
 
-
-void ofxGuiLayout::saveLayout(string path){
-    int num_panels = 0;
+void ofxGuiLayout::saveLayout(string path)
+{
+    ofXml xml;
+    auto layout = xml.appendChild("layout");
     
-	ofxXmlPoco xml;
-    xml.addChild("layout");
-    
-    for(int i=0; i<panels.size(); i++){
-        ofxPanel* panel = panels[i];
-        
-        xml.setTo("//layout");
-        xml.addChild("panel");
-        xml.setTo("panel[" + ofToString(num_panels) + "]");
-        xml.setAttribute("name", panel->getName());
-        xml.addValue("x", panel->getPosition().x);
-        xml.addValue("y", panel->getPosition().y);
-        
-        num_panels++;
+    for (auto& panel : panels) {
+        auto xmlPanel = layout.appendChild("panel");
+        xmlPanel.setAttribute("name", panel->getName());
+        xmlPanel.appendChild("x").set(panel->getPosition().x);
+        xmlPanel.appendChild("y").set(panel->getPosition().y);
     }
-    
-    for(int i=0; i<panelsPreset.size(); i++){
-        ofxPresets* panel = panelsPreset[i];
-
-        xml.setTo("//layout");
-        xml.addChild("panel");
-        xml.setTo("panel[" + ofToString(num_panels) + "]");
-        xml.setAttribute("name", panel->getName());
-        xml.addValue("x", panel->getPosition().x);
-        xml.addValue("y", panel->getPosition().y);
-
-        num_panels++;
-    }
-    
     xml.save(path);
 }
